@@ -11,13 +11,13 @@ is_double_linked_list: False 单向链表; True 双向. Default: False
 >>> val_list = range(0, 5)
 
 >>> # 单向
->>> head, _ = make_linked_list(val)
+>>> head, _ = make_linked_list(val_list)
 >>> print_linked_list(head)
 
 >>> # 双向
->>> head, tail = make_linked_list(val, is_double_linked_list=True)
+>>> head, tail = make_linked_list(val_list, is_double_linked_list=True)
 >>> print_linked_list(head)
->>> print_linked_list(tail)
+>>> print_linked_list(tail, direction=0)        # direction=0 时, 作为双向链表向前遍历
 """
 
 
