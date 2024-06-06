@@ -20,8 +20,7 @@ def main():
     root = make_tree(val_list)
     bt_printer = BinaryTreePrint()
     bt_printer.print_tree(root)
-    vis = BinaryTreeVisualizer()
-    vis.visualizer_tree(root)
+    BinaryTreeVisualizer().visualizer_tree(root)
 
 
 if __name__ == "__main__":
