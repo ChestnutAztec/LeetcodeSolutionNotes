@@ -5,30 +5,29 @@
 链表数据结构
 is_double_linked_list: False 单向链表; True 双向. Default: False
 
->>> from data_structure.linked_list import Node
->>> from data_structure.linked_list import make_linked_list, print_linked_list
+>>> from data_structure import Node
+>>> from data_structure import make_linked_list, print_linked_list, get_tail
 
 >>> val_list = range(0, 5)
 
 >>> # 单向
->>> head, _ = make_linked_list(val_list)
+>>> head = make_linked_list(val_list)
 >>> print_linked_list(head)
 
 >>> # 双向
->>> head, tail = make_linked_list(val_list, is_double_linked_list=True)
+>>> head = make_linked_list(val_list, is_double_linked_list=True)
 >>> print_linked_list(head)
+>>> tail = get_tail(head)
 >>> print_linked_list(tail, direction=0)        # direction=0 时, 作为双向链表向前遍历
 """
 
 
 class Node(object):
     """docstring for Node"""
-    def __init__(self, val='', is_head_tail=0, is_double_linked_list=False):
-        self.is_head_tail = is_head_tail
+    def __init__(self, val='', next=None, prev=None, is_double_linked_list=False):
         self.val = val
         self.next = None
-        if is_double_linked_list:
-            self.prev = None
+        self.prev = None
 
     def __str__(self):
         """TODO: Docstring for __str__.
@@ -46,10 +45,9 @@ def append_node(cur, val='', is_head_tail=0, is_double_linked_list=False):
     :val: TODO
     :returns: TODO
     """
-    new_node = Node(val=val, is_head_tail=is_head_tail, is_double_linked_list=is_double_linked_list)
-    cur.next = new_node
+    cur.next = Node(val=val, is_double_linked_list=is_double_linked_list)
     if is_double_linked_list:
-        new_node.prev = cur
+        cur.next.prev = cur
     cur = cur.next
     return cur
 
@@ -61,39 +59,55 @@ def make_linked_list(val_list, is_double_linked_list=False):
     :is_double_linked_list: TODO
     :returns: TODO
     """
-    head = Node(is_head_tail=1,  is_double_linked_list=is_double_linked_list)
-    tail = None
+    if not val_list:
+        return None
+    head = Node(is_double_linked_list=is_double_linked_list)
     cur = head
     for val in val_list:
         cur = append_node(cur, val, is_double_linked_list=is_double_linked_list)
-    if is_double_linked_list:
-        tail = append_node(cur, val='', is_head_tail=2, is_double_linked_list=is_double_linked_list)
-    return head, tail
+    head.next.prev = None
+    return head.next
 
 
-def print_linked_list(start, direction=1):
+def get_tail(head):
+    """TODO: Docstring for get_tail.
+    :head: TODO
+    :returns: TODO
+    """
+    if not head:
+        return None
+    dump_head = Node()
+    dump_head.next = head
+    cur = dump_head
+    while cur.next:
+        cur = cur.next
+    return cur
+
+def print_linked_list(head, direction=1, detail=False):
     """TODO: Docstring for print_linked_list.
     :head: TODO
     :returns: TODO
     """
-    cur = start.next if direction == 1 else start.prev
+    if not head:
+        return
     val_list = []
-    while cur and cur.is_head_tail == 0:
-        val_list.append(cur.val)
-        cur = cur.next if direction  == 1 else cur.prev
+    if direction == 1:
+        dump_head = Node()
+        dump_head.next = head
+        cur = dump_head.next
+        while cur:
+            if detail:
+                print(cur)
+            val_list.append(cur.val)
+            cur = cur.next
+    else:
+        dump_head = Node()
+        dump_head.prev = head
+        cur = dump_head.prev
+        while cur:
+            if detail:
+                print(cur)
+            val_list.append(cur.val)
+            cur = cur.prev
     print(' -> '.join(f'{item}' for item in val_list))
 
-
-def test():
-    """TODO: Docstring for test.
-    :returns: TODO
-    """
-    val_list = range(0, 5)
-    print(val_list)
-    head, tail = make_linked_list(val_list, is_double_linked_list=True)
-    print_linked_list(head)
-    print_linked_list(tail, direction=0)
-
-
-if __name__ == "__main__":
-    test()
